@@ -2,14 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Items;
-use App\Interfaces\IRestController;
+use App\{
+    Entity\Items,
+    Interfaces\IRestController
+};
+use Symfony\Component\HttpFoundation\{
+    Response,
+    JsonResponse,
+    Request
+};
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Interfaces\RestControllerInterface;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RestController extends Controller implements IRestController
 {
@@ -24,5 +29,20 @@ class RestController extends Controller implements IRestController
         $items = $repository->findAll();
         return new JsonResponse($items, Response::HTTP_OK);
     }
-}
 
+    /**
+     * Create item [POST]
+     * @Route("/add", name="items_add")
+     * @FOSRest\Post("/add")
+     */
+    public function createItem(Request $request)
+    {
+        $item = new Items();
+        $item->setName($request->get('name'));
+        $item->setAmount($request->get('amount'));
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($item);
+        $manager->flush();
+        return new Response('added', Response::HTTP_CREATED);
+    }
+}
