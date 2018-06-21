@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ItemsRepository")
  */
-class Items
+class Items implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -53,5 +53,12 @@ class Items
         $this->amount = $amount;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        $vars = get_object_vars($this);
+
+        return $vars;
     }
 }

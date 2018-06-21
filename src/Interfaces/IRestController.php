@@ -5,10 +5,9 @@ use Symfony\Component\HttpFoundation\Request;
 interface IRestController
 {
     /**
-     * Display all items
+     * Display all items [GET]
      * @method GET
      * @Route("/items", name="items_display")
      */
-    public function itemsGetAll();
-
+    public function getAll();
 }
