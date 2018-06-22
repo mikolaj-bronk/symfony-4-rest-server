@@ -53,7 +53,19 @@ class RestController extends Controller implements IRestController
     public function getItemsWhereAmountIsGreaterThanZero()
     {
         $repository = $this->getDoctrine()->getRepository(Items::class);
-        $items = $repository->findItemsWhereAmountIsGreaterThanZero();
+        $items = $repository->findItemsWhereAmountIsGreaterThan(0);
+        return new JsonResponse($items, Response::HTTP_OK);
+    }
+
+    /**
+     * Display items where amount is greater than five [GET]
+     * @Route("/items/foundfive", name="items_amount_more_than_five_found_return")
+     * @FOSRest\Get("/items/foundfive")
+     */
+    public function getItemsWhereAmountIsGreaterThanFive()
+    {
+        $repository = $this->getDoctrine()->getRepository(Items::class);
+        $items = $repository->findItemsWhereAmountIsGreaterThan(5);
         return new JsonResponse($items, Response::HTTP_OK);
     }
 

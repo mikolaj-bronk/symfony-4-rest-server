@@ -23,14 +23,16 @@ class ItemsRepository extends ServiceEntityRepository
 //     * @return Items[] Returns an array of Items objects
 //     */
 
-    public function findItemsWhereAmountIsGreaterThanZero()
+    public function findItemsWhereAmountIsGreaterThan($value)
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.amount > 0')
+            ->andWhere('i.amount > :val')
+            ->setParameter('val', $value)
             ->getQuery()
             ->getResult()
         ;
     }
+
 
     public function findItemsWhereAmountIsEqualToZero()
     {
