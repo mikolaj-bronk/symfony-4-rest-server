@@ -34,6 +34,18 @@ class RestController extends Controller implements IRestController
     }
 
     /**
+     * Display items where amount is greater than zero [GET]
+     * @Route("/items/found", name="items_found_display")
+     * @FOSRest\Get("/items/found")
+     */
+    public function getItemsWhereAmountIsGreaterThanZero()
+    {
+        $repository = $this->getDoctrine()->getRepository(Items::class);
+        $items = $repository->findItemsWhereAmountIsGreaterThanZero();
+        return new JsonResponse($items, Response::HTTP_OK);
+    }
+
+    /**
      * Create item [POST]
      * @Route("/add", name="items_create")
      * @FOSRest\Post("/add")

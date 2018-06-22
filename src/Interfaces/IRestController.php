@@ -25,4 +25,5 @@ interface IRestController
      * @FOSRest\Delete("/delete")
      */
     public function delete(Request $request);
+
 }
