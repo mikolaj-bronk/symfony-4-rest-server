@@ -22,29 +22,33 @@ class ItemsRepository extends ServiceEntityRepository
 //    /**
 //     * @return Items[] Returns an array of Items objects
 //     */
-    /*
-    public function findByExampleField($value)
+
+    public function findItemsWhereAmountIsGreaterThanZero()
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('i.amount > 0')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Items
+    public function findItemsWhereAmountIsEqualToZero()
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
+            ->andWhere('i.amount = 0')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    public function findOneById($value): ?Items
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.id = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }

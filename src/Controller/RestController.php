@@ -12,9 +12,12 @@ use Symfony\Component\HttpFoundation\{
     Request
 };
 
+use App\Repository\ItemsRepository;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestController extends Controller implements IRestController
 {
@@ -32,7 +35,7 @@ class RestController extends Controller implements IRestController
 
     /**
      * Create item [POST]
-     * @Route("/add", name="items_add")
+     * @Route("/add", name="items_create")
      * @FOSRest\Post("/add")
      */
     public function createItem(Request $request)
@@ -44,5 +47,22 @@ class RestController extends Controller implements IRestController
         $manager->persist($item);
         $manager->flush();
         return new Response('added', Response::HTTP_CREATED);
+    }
+    /**
+     * Delete item [DELETE]
+     * @Route("/delete", name="items_delete")
+     * @FOSRest\Delete("/delete")
+     */
+    public function delete(Request $request)
+    {
+        $item = $this->getDoctrine()
+            ->getRepository(Items::class)
+            ->findOneById($request->get('id'));
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($item);
+        $manager->flush();
+
+        return new Response('deleted', Response::HTTP_OK);
     }
 }

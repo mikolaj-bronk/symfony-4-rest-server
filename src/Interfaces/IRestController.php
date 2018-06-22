@@ -18,4 +18,11 @@ interface IRestController
      * @Route("/items", name="items_add")
      */
     public function createItem(Request $request);
+
+    /**
+     * Delete item [DELETE]
+     * @Route("/delete", name="items_delete")
+     * @FOSRest\Delete("/delete")
+     */
+    public function delete(Request $request);
 }
