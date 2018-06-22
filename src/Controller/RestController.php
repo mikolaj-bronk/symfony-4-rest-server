@@ -22,8 +22,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RestController extends Controller implements IRestController
 {
     /**
-     * Display all items [GET]
-     * @Route("/items", name="items_display")
+     * Returns all items [GET]
+     * @Route("/items", name="items_return")
      * @FOSRest\Get("/items")
      */
     public function getAll()
@@ -34,8 +34,20 @@ class RestController extends Controller implements IRestController
     }
 
     /**
+     * Returns items where amount is greater than zero [GET]
+     * @Route("/items/notfound", name="items_not_found_return")
+     * @FOSRest\Get("/items/notfound")
+     */
+    public function getItemsWhereAmountIsEqualToZero()
+    {
+        $repository = $this->getDoctrine()->getRepository(Items::class);
+        $items = $repository->findItemsWhereAmountIsEqualToZero();
+        return new JsonResponse($items, Response::HTTP_OK);
+    }
+
+    /**
      * Display items where amount is greater than zero [GET]
-     * @Route("/items/found", name="items_found_display")
+     * @Route("/items/found", name="items_found_return")
      * @FOSRest\Get("/items/found")
      */
     public function getItemsWhereAmountIsGreaterThanZero()
@@ -60,6 +72,7 @@ class RestController extends Controller implements IRestController
         $manager->flush();
         return new Response('added', Response::HTTP_CREATED);
     }
+
     /**
      * Delete item [DELETE]
      * @Route("/delete", name="items_delete")
