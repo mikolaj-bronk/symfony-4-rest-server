@@ -1,7 +1,11 @@
 <?php
-namespace App\Controller\Interfaces;
+namespace App\Interfaces;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\{
+    JsonResponse,
+    Request,
+    Response
+};
 
 interface RestInterface
 {
@@ -9,29 +13,29 @@ interface RestInterface
      * Get one item [GET]
      * @FOSRest\Get("/items/{id}")
      */
-    public function getOne(int $id);
+    public function getOne(int $id): JsonResponse;
 
     /**
      * Returns all items [GET]
      * @FOSRest\Get("/items")
      */
-    public function getAll();
+    public function getAll(): JsonResponse;
 
     /**
      * Create item [POST]
      * @FOSRest\Post("/items")
      */
-    public function create(Request $request);
+    public function create(Request $request): Response;
 
     /**
      * Delete item [DELETE]
      * @FOSRest\Delete("/items/{id}")
      */
-    public function delete(int $id);
+    public function delete(int $id): Response;
 
     /**
      * Update item [PUT]
      * @FOSRest\Put("/items")
      */
-    public function update(Request $request);
+    public function update(Request $request): Response;
 }

@@ -37,7 +37,7 @@ class Items implements \JsonSerializable
      */
     private $amount;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -66,7 +66,7 @@ class Items implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return get_object_vars($this);
     }

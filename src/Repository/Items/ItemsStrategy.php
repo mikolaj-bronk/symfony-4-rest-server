@@ -36,7 +36,7 @@ class ItemsStrategy
         $this->strategy = new $className($repo);
     }
 
-    public function getItems($value)
+    public function getItems(int $value): array
     {
         return $this->strategy->getItems($value);
     }

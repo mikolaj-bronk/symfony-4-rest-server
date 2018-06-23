@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Items;
-use App\Repository\Items\ItemsStrategy;
+use App\Repository\Items\{
+    Interfaces\ItemsStrategyInterface,
+    ItemsStrategy
+};
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -20,7 +23,7 @@ class ItemsRepository extends ServiceEntityRepository
         parent::__construct($registry, Items::class);
     }
 
-    public function findItemsWhere(string $mark, int $value = 0)
+    public function findItemsWhere(string $mark, int $value = 0): array
     {
         return (new ItemsStrategy($mark, $this))->getItems($value);
     }

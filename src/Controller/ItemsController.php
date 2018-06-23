@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use App\Controller\Interfaces\RestInterface;
+use App\Interfaces\RestInterface;
 use App\Entity\Items;
 
+use App\Exceptions\ItemExpection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\{
     Response,
@@ -32,7 +33,7 @@ class ItemsController extends Controller implements RestInterface
      * Returns all items [GET]
      * @FOSRest\Get("/items")
      */
-    public function getAll()
+    public function getAll(): JsonResponse
     {
         $items = $this->repository->findAll();
 
@@ -43,9 +44,13 @@ class ItemsController extends Controller implements RestInterface
      * Get one item [GET]
      * @FOSRest\Get("/items/{id}")
      */
-    public function getOne(int $id)
+    public function getOne(int $id): JsonResponse
     {
         $item = $this->repository->findOneById($id);
+
+        if ($item === null) {
+            throw new ItemExpection('Item was not found.');
+        }
 
         return new JsonResponse($item, Response::HTTP_OK);
     }
@@ -54,7 +59,7 @@ class ItemsController extends Controller implements RestInterface
      * Returns items where amount is equal to zero [GET]
      * @FOSRest\Get("/unavailable")
      */
-    public function getUnavailable()
+    public function getUnavailable(): JsonResponse
     {
         $items = $this->repository->findItemsWhere('=');
 
@@ -65,7 +70,7 @@ class ItemsController extends Controller implements RestInterface
      * Display items where amount is greater than zero [GET]
      * @FOSRest\Get("/available")
      */
-    public function getAvailable()
+    public function getAvailable(): JsonResponse
     {
         $items = $this->repository->findItemsWhere('>', 0);
 
@@ -76,7 +81,7 @@ class ItemsController extends Controller implements RestInterface
      * Display items where amount is greater than {amount} [GET]
      * @FOSRest\Get("/available/{amount}")
      */
-    public function getGreaterThan($amount)
+    public function getGreaterThan(int $amount): JsonResponse
     {
         $items = $this->repository->findItemsWhere('>', $amount);
 
@@ -87,7 +92,7 @@ class ItemsController extends Controller implements RestInterface
      * Create item [POST]
      * @FOSRest\Post("/items")
      */
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $item = new Items();
         $item->setName($request->get('name'));
@@ -104,7 +109,7 @@ class ItemsController extends Controller implements RestInterface
      * Delete item [DELETE]
      * @FOSRest\Delete("/items/{id}")
      */
-    public function delete($id)
+    public function delete(int $id): Response
     {
         $item = $this->getDoctrine()
             ->getRepository(Items::class)
@@ -121,7 +126,7 @@ class ItemsController extends Controller implements RestInterface
      * Update item [PUT]
      * @FOSRest\Put("/items")
      */
-    public function update(Request $request)
+    public function update(Request $request): Response
     {
         $manager = $this->getDoctrine()->getManager();
         $item = $this->getDoctrine()
