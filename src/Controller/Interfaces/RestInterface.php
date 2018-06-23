@@ -6,37 +6,32 @@ use Symfony\Component\HttpFoundation\Request;
 interface RestInterface
 {
     /**
+     * Get one item [GET]
+     * @FOSRest\Get("/items/{id}")
+     */
+    public function getOne(int $id);
+
+    /**
      * Returns all items [GET]
-     * @method GET
-     * @Route("/items", name="items_all")
+     * @FOSRest\Get("/items")
      */
     public function getAll();
 
     /**
      * Create item [POST]
-     * @method POST
-     * @Route("/items", name="items_create")
+     * @FOSRest\Post("/items")
      */
     public function create(Request $request);
 
     /**
      * Delete item [DELETE]
-     * @Route("/delete", name="items_delete")
-     * @FOSRest\Delete("/delete")
+     * @FOSRest\Delete("/items/{id}")
      */
-    public function delete(Request $request);
+    public function delete(int $id);
 
     /**
      * Update item [PUT]
-     * @Route("/update/{id}", name="items_update")
-     * @FOSRest\Put("/update")
+     * @FOSRest\Put("/items")
      */
-    public function update(int $id, Request $request);
-
-    /**
-     * Get one item [GET]
-     * @Route("/items/{id}", name="items_one")
-     * @FOSRest\Get("/items")
-     */
-    public function getOne(int $id);
+    public function update(Request $request);
 }

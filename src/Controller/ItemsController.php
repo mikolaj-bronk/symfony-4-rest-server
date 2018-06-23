@@ -30,7 +30,6 @@ class ItemsController extends Controller implements RestInterface
 
     /**
      * Returns all items [GET]
-     * @Route("/items", name="items_all")
      * @FOSRest\Get("/items")
      */
     public function getAll()
@@ -42,8 +41,7 @@ class ItemsController extends Controller implements RestInterface
 
     /**
      * Get one item [GET]
-     * @Route("/items/{id}", name="items_one")
-     * @FOSRest\Get("/items")
+     * @FOSRest\Get("/items/{id}")
      */
     public function getOne(int $id)
     {
@@ -54,8 +52,7 @@ class ItemsController extends Controller implements RestInterface
 
     /**
      * Returns items where amount is equal to zero [GET]
-     * @Route("/items/notfound", name="items_unavailable")
-     * @FOSRest\Get("/items/notfound")
+     * @FOSRest\Get("/unavailable")
      */
     public function getUnavailable()
     {
@@ -66,8 +63,7 @@ class ItemsController extends Controller implements RestInterface
 
     /**
      * Display items where amount is greater than zero [GET]
-     * @Route("/items/found", name="items_available")
-     * @FOSRest\Get("/items/found")
+     * @FOSRest\Get("/available")
      */
     public function getAvailable()
     {
@@ -77,27 +73,26 @@ class ItemsController extends Controller implements RestInterface
     }
 
     /**
-     * Display items where amount is greater than five [GET]
-     * @Route("/items/foundfive", name="items_greater_than_five")
-     * @FOSRest\Get("/items/foundfive")
+     * Display items where amount is greater than {amount} [GET]
+     * @FOSRest\Get("/available/{amount}")
      */
-    public function getGreaterThanFive()
+    public function getGreaterThan($amount)
     {
-        $items = $this->repository->findItemsWhere('>', 5);
+        $items = $this->repository->findItemsWhere('>', $amount);
 
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
     /**
      * Create item [POST]
-     * @Route("/add", name="items_create")
-     * @FOSRest\Post("/add")
+     * @FOSRest\Post("/items")
      */
     public function create(Request $request)
     {
         $item = new Items();
         $item->setName($request->get('name'));
         $item->setAmount($request->get('amount'));
+
         $manager = $this->getDoctrine()->getManager();
         $manager->persist($item);
         $manager->flush();
@@ -107,14 +102,13 @@ class ItemsController extends Controller implements RestInterface
 
     /**
      * Delete item [DELETE]
-     * @Route("/delete", name="items_delete")
-     * @FOSRest\Delete("/delete")
+     * @FOSRest\Delete("/items/{id}")
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
         $item = $this->getDoctrine()
             ->getRepository(Items::class)
-            ->findOneById($request->get('id'));
+            ->findOneById($id);
 
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($item);
@@ -125,15 +119,14 @@ class ItemsController extends Controller implements RestInterface
 
     /**
      * Update item [PUT]
-     * @Route("/update/{id}", name="items_update")
-     * @FOSRest\Put("/update")
+     * @FOSRest\Put("/items")
      */
-    public function update(int $id, Request $request)
+    public function update(Request $request)
     {
         $manager = $this->getDoctrine()->getManager();
         $item = $this->getDoctrine()
             ->getRepository(Items::class)
-            ->findOneById($id);
+            ->findOneById($request->get('id'));
 
         $item->setName($request->get('name'));
         $item->setAmount($request->get('amount'));
