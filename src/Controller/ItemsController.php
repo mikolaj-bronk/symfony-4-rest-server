@@ -2,70 +2,76 @@
 
 namespace App\Controller;
 
-use App\{
-    Entity\Items,
-    Interfaces\IRestController
-};
+use App\Controller\Interfaces\RestInterface;
+use App\Entity\Items;
+
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\{
     Response,
     JsonResponse,
     Request
 };
 
-use App\Repository\ItemsRepository;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class RestController extends Controller implements IRestController
+class ItemsController extends Controller implements RestInterface
 {
+    private const SUCCESS_CREATED_ITEM = 'Item has successfully created';
+    private const SUCCESS_DELETED_ITEM = 'Item has successfully deleted';
+    private $repository;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->repository = $entityManager->getRepository(Items::class);
+    }
+
     /**
      * Returns all items [GET]
-     * @Route("/items", name="items_return")
+     * @Route("/items", name="items_all")
      * @FOSRest\Get("/items")
      */
     public function getAll()
     {
-        $repository = $this->getDoctrine()->getRepository(Items::class);
-        $items = $repository->findAll();
+        $items = $this->repository->findAll();
+
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
     /**
-     * Returns items where amount is greater than zero [GET]
-     * @Route("/items/notfound", name="items_not_found_return")
+     * Returns items where amount is equal to zero [GET]
+     * @Route("/items/notfound", name="items_unavailable")
      * @FOSRest\Get("/items/notfound")
      */
-    public function getItemsWhereAmountIsEqualToZero()
+    public function getUnavailable()
     {
-        $repository = $this->getDoctrine()->getRepository(Items::class);
-        $items = $repository->findItemsWhereAmountIsEqualToZero();
+        $items = $this->repository->findItemsWhere('=');
+
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
     /**
      * Display items where amount is greater than zero [GET]
-     * @Route("/items/found", name="items_found_return")
+     * @Route("/items/found", name="items_available")
      * @FOSRest\Get("/items/found")
      */
-    public function getItemsWhereAmountIsGreaterThanZero()
+    public function getAvailable()
     {
-        $repository = $this->getDoctrine()->getRepository(Items::class);
-        $items = $repository->findItemsWhereAmountIsGreaterThan(0);
+        $items = $this->repository->findItemsWhere('>', 0);
+
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
     /**
      * Display items where amount is greater than five [GET]
-     * @Route("/items/foundfive", name="items_amount_more_than_five_found_return")
+     * @Route("/items/foundfive", name="items_greater_than_five")
      * @FOSRest\Get("/items/foundfive")
      */
     public function getItemsWhereAmountIsGreaterThanFive()
     {
-        $repository = $this->getDoctrine()->getRepository(Items::class);
-        $items = $repository->findItemsWhereAmountIsGreaterThan(5);
+        $items = $this->repository->findItemsWhere('>', 5);
+
         return new JsonResponse($items, Response::HTTP_OK);
     }
 
@@ -74,7 +80,7 @@ class RestController extends Controller implements IRestController
      * @Route("/add", name="items_create")
      * @FOSRest\Post("/add")
      */
-    public function createItem(Request $request)
+    public function create(Request $request)
     {
         $item = new Items();
         $item->setName($request->get('name'));
@@ -82,7 +88,8 @@ class RestController extends Controller implements IRestController
         $manager = $this->getDoctrine()->getManager();
         $manager->persist($item);
         $manager->flush();
-        return new Response('added', Response::HTTP_CREATED);
+
+        return new Response(self::SUCCESS_CREATED_ITEM, Response::HTTP_CREATED);
     }
 
     /**
@@ -100,6 +107,6 @@ class RestController extends Controller implements IRestController
         $manager->remove($item);
         $manager->flush();
 
-        return new Response('deleted', Response::HTTP_OK);
+        return new Response(self::SUCCESS_DELETED_ITEM, Response::HTTP_OK);
     }
 }

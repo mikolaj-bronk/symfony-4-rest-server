@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Items;
+use App\Repository\Items\ItemsStrategy;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,30 +20,10 @@ class ItemsRepository extends ServiceEntityRepository
         parent::__construct($registry, Items::class);
     }
 
-//    /**
-//     * @return Items[] Returns an array of Items objects
-//     */
-
-    public function findItemsWhereAmountIsGreaterThan($value)
+    public function findItemsWhere(string $mark, int $value = 0)
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.amount > :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getResult()
-        ;
+        return (new ItemsStrategy($mark, $this))->getItems($value);
     }
-
-
-    public function findItemsWhereAmountIsEqualToZero()
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.amount = 0')
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
 
     public function findOneById($value): ?Items
     {

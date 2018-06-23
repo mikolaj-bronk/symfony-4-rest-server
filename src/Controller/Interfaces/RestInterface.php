@@ -1,9 +1,9 @@
 <?php
-namespace App\Interfaces;
+namespace App\Controller\Interfaces;
 
 use Symfony\Component\HttpFoundation\Request;
 
-interface IRestController
+interface RestInterface
 {
     /**
      * Returns all items [GET]
@@ -17,7 +17,7 @@ interface IRestController
      * @method POST
      * @Route("/items", name="items_add")
      */
-    public function createItem(Request $request);
+    public function create(Request $request);
 
     /**
      * Delete item [DELETE]
