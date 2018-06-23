@@ -27,6 +27,9 @@ class Items implements \JsonSerializable
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank()
+     * @Assert\GreaterThanOrEqual(
+     *     value = 0
+     * )
      * @Assert\Type(
      *    type="integer",
      *    message="The value {{ value }} is not a valid {{ type }}."

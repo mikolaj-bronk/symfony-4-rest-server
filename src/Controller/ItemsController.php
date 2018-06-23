@@ -20,6 +20,7 @@ class ItemsController extends Controller implements RestInterface
 {
     private const SUCCESS_CREATED_ITEM = 'Item has successfully created';
     private const SUCCESS_DELETED_ITEM = 'Item has successfully deleted';
+    private const SUCCESS_UPDATED_ITEM = 'Item has successfully updated';
     private $repository;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -37,6 +38,16 @@ class ItemsController extends Controller implements RestInterface
         $items = $this->repository->findAll();
 
         return new JsonResponse($items, Response::HTTP_OK);
+    }
+
+    /**
+     * Get one item [GET]
+     * @Route("/items/{id}", name="items_one")
+     * @FOSRest\Get("/items")
+     */
+    public function getOne(int $id)
+    {
+
     }
 
     /**
@@ -68,7 +79,7 @@ class ItemsController extends Controller implements RestInterface
      * @Route("/items/foundfive", name="items_greater_than_five")
      * @FOSRest\Get("/items/foundfive")
      */
-    public function getItemsWhereAmountIsGreaterThanFive()
+    public function getGreaterThanFive()
     {
         $items = $this->repository->findItemsWhere('>', 5);
 
@@ -108,5 +119,24 @@ class ItemsController extends Controller implements RestInterface
         $manager->flush();
 
         return new Response(self::SUCCESS_DELETED_ITEM, Response::HTTP_OK);
+    }
+
+    /**
+     * Update item [PUT]
+     * @Route("/update/{id}", name="items_update")
+     * @FOSRest\Put("/update")
+     */
+    public function update(int $id, Request $request)
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $item = $this->getDoctrine()
+            ->getRepository(Items::class)
+            ->findOneById($id);
+
+        $item->setName($request->get('name'));
+        $item->setAmount($request->get('amount'));
+        $manager->flush();
+
+        return new Response(self::SUCCESS_UPDATED_ITEM, Response::HTTP_OK);
     }
 }

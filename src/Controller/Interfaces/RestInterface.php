@@ -8,14 +8,14 @@ interface RestInterface
     /**
      * Returns all items [GET]
      * @method GET
-     * @Route("/items", name="items_return")
+     * @Route("/items", name="items_all")
      */
     public function getAll();
 
     /**
      * Create item [POST]
      * @method POST
-     * @Route("/items", name="items_add")
+     * @Route("/items", name="items_create")
      */
     public function create(Request $request);
 
@@ -26,4 +26,17 @@ interface RestInterface
      */
     public function delete(Request $request);
 
+    /**
+     * Update item [PUT]
+     * @Route("/update/{id}", name="items_update")
+     * @FOSRest\Put("/update")
+     */
+    public function update(int $id, Request $request);
+
+    /**
+     * Get one item [GET]
+     * @Route("/items/{id}", name="items_one")
+     * @FOSRest\Get("/items")
+     */
+    public function getOne(int $id);
 }
