@@ -47,7 +47,9 @@ class ItemsController extends Controller implements RestInterface
      */
     public function getOne(int $id)
     {
+        $item = $this->repository->findOneById($id);
 
+        return new JsonResponse($item, Response::HTTP_OK);
     }
 
     /**
