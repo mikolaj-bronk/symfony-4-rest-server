@@ -44,7 +44,7 @@ php bin/console server:run
 
 # Instalacja Paczki serwera
 
-Link do projektu klienta: [TUTAJ](https://github.com/mikolaj-bronk/symfony-4-rest-server-bundle)
+Link do paczki serwera: [TUTAJ](https://github.com/mikolaj-bronk/symfony-4-rest-server-bundle)
 
 ## Wymagania: 
 - Utworzony projekt w frameworku *Symfony 4*
