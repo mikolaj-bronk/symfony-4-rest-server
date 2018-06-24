@@ -24,6 +24,9 @@ php bin/console server:run
 
 
 # Instalacja Projektu klienta
+
+Link do projektu klienta: [TUTAJ](https://github.com/mikolaj-bronk/symfony-4-rest-client)
+
 Po pobraniu repozytorium należy użyć komendy
 ```console
 composer update
@@ -40,6 +43,8 @@ php bin/console server:run
 
 
 # Instalacja Paczki serwera
+
+Link do projektu klienta: [TUTAJ](https://github.com/mikolaj-bronk/symfony-4-rest-server-bundle)
 
 ## Wymagania: 
 - Utworzony projekt w frameworku *Symfony 4*
